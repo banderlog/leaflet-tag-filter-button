@@ -155,8 +155,10 @@
          * */
         addToReleated: function(other) {
             if (other && other instanceof L.Control.TagFilterButton && this._releatedFilterButtons.indexOf(other) == -1) {
+                // relate this with other and vice versa
                 this._releatedFilterButtons.push(other);
-                return other.addToReleated(this);
+                other._releatedFilterButtons.push(this);
+                return true;
             }
             console.error("could not add tagFilterButton instance to releated");
             return false;
@@ -403,6 +405,13 @@
 
             if (this.options.onSelectionComplete && typeof this.options.onSelectionComplete == 'function') {
                 this.options.onSelectionComplete.call(this, this._selectedTags);
+            }
+
+            // update relatedFilterButtons
+            if (this._releatedFilterButtons.length) {
+                for (var r = 0; r < this._releatedFilterButtons.length; r++) {
+                    this._releatedFilterButtons[r].update();
+                }
             }
         },
 
